@@ -1,0 +1,11 @@
+
+ Performance counter stats for process id '21839':
+
+     5,211,609,457      L1-dcache-load                                              
+       193,829,903      L1-dcache-load-miss       #    3.72% of all L1-dcache accesses
+       394,776,068      ll_cache                                                    
+       116,823,884      ll_cache_miss                                               
+    13,409,751,176      instructions                                                
+
+      10.001710920 seconds time elapsed
+

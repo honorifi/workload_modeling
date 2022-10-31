@@ -1,0 +1,10 @@
+Seq:
+Samples	, Byte/thd	, ChaseThds	, ChaseNS	, ChaseMibs	, ChDeviate	, LoadThds	, LdMaxMibs	, LdAvgMibs	, LdDeviate	, ChaseArg	, MemLdArg
+5     	, 268435456  	, 1       	, 113.828 	, 67      	, 0.002   	, 0       	, 0       	, 0       	, 0.000   	, simple    	, --------
+40960.00 MiB transferred (20811.02 MiB/sec)
+Rand:
+Samples	, Byte/thd	, ChaseThds	, ChaseNS	, ChaseMibs	, ChDeviate	, LoadThds	, LdMaxMibs	, LdAvgMibs	, LdDeviate	, ChaseArg	, MemLdArg
+5     	, 268435456  	, 1       	, 115.146 	, 66      	, 0.008   	, 0       	, 0       	, 0       	, 0.000   	, simple    	, --------
+40960.00 MiB transferred (20398.01 MiB/sec)
+latency_diff = 1.158%
+bandwidth_diff = 2.025%
