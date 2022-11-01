@@ -215,10 +215,10 @@ int main(int argc, char *argv[]){
                     printf("no mode matched with %s\n",argv[i+1]);
             }
             else if(argv[i][1]=='s'){
-                step = stoi(argv[i+1]);
+                step = atoi(argv[i+1]);
             }
-            else if(isdigit(argv[i][1])){
-                throughput = stoi(argv[i]);
+            else if('0'<=argv[i][1] && argv[i][1]<='9'){
+                throughput = atoi(argv[i]+1);
             }
             else if(argv[i][1]=='-' && (!strcmp(argv[i]+2,"help"))){
                 puts("-m [str]\t:\tset mode, valid mode: Seq, Random, Interval");
