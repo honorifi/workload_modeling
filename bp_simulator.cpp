@@ -75,16 +75,32 @@ class MemContainer{
     }
 
     void Read_seq(int x, int of = 0){
-        register int _tmp;
-        for(int i=of;i<of+x;i+=MOV_ADD_OFFSET){
-            R_UNROOL(MOV_ADD_OFFSET, _tmp, (_Memptr+i) );
+        if(x > MOV_ADD_OFFSET){
+            register int _tmp;
+            for(int i=of;i<of+x;i+=MOV_ADD_OFFSET){
+                R_UNROOL(MOV_ADD_OFFSET, _tmp, (_Memptr+i) );
+            }
+        }
+        else{
+            register int _tmp;
+            for(int i=of;i<of+x;i++){
+                _tmp = _Memptr[i];
+            }
         }
     }
 
     void Write_seq(int x, int of = 0){
-        register int _tmp;
-        for(int i=of;i<of+x;i++){
-            W_UNROOL(MOV_ADD_OFFSET, (_Memptr+i), _tmp );
+        if(x > MOV_ADD_OFFSET){
+            register int _tmp;
+            for(int i=of;i<of+x;i++){
+                W_UNROOL(MOV_ADD_OFFSET, (_Memptr+i), _tmp );
+            }
+        }
+        else{
+            register int _tmp;
+            for(int i=of;i<of+x;i++){
+                _Memptr[i] = _tmp;
+            }
         }
     }
 
@@ -131,12 +147,12 @@ class MemRequestor{
     int r_ratio, w_ratio;
     int Throughput;
 
-    MemRequestor(int throughput = 24000, int block = 4096, int r = 1, int w = 1){
+    MemRequestor(int throughput = 24000, int block = 4096, double rwp = 0.5){
         Throughput = throughput;
         _num_loop = Throughput/(DEF_TOTAL_MEMORY>>20);
         block_size = block;
-        r_ratio = DEF_TOTAL_MEMORY/(r+w)*r;
-        w_ratio = DEF_TOTAL_MEMORY/(r+w)*w;
+        r_ratio = int(DEF_TOTAL_MEMORY*rwp);
+        w_ratio = DEF_TOTAL_MEMORY-r_ratio;
         Mc.Apply(DEF_TOTAL_MEMORY);
     }
 
@@ -149,9 +165,9 @@ class MemRequestor{
         block_size = block;
     }
 
-    void update_r_w(int r, int w){
-        r_ratio = DEF_TOTAL_MEMORY/(r+w)*r;
-        w_ratio = DEF_TOTAL_MEMORY/(r+w)*w;
+    void update_r_w(double rwp){
+        r_ratio = int(DEF_TOTAL_MEMORY*rwp);
+        w_ratio = DEF_TOTAL_MEMORY-r_ratio;
     }
 
     void Request_Seq(){
@@ -200,7 +216,8 @@ class MemRequestor{
 
 int main(int argc, char *argv[]){
     int throughput = 24000;                         //unit: MB
-    int mode=0, step=10;
+    int mode=0, step=10, block = 16;
+    double rwp = 0.5;
 
     for(int i=1;i<argc;i++){
         if(argv[i][0]=='-'){
@@ -217,8 +234,14 @@ int main(int argc, char *argv[]){
             else if(argv[i][1]=='s'){
                 step = atoi(argv[i+1]);
             }
+            else if(argv[i][1]=='b'){
+                block = atoi(argv[i+1]);
+            }
             else if('0'<=argv[i][1] && argv[i][1]<='9'){
                 throughput = atoi(argv[i]+1);
+            }
+            else if(!strcmp(argv[i]+1, "rwp")){
+                rwp = double(atof(argv[i+1]));
             }
             else if(argv[i][1]=='-' && (!strcmp(argv[i]+2,"help"))){
                 puts("-m [str]\t:\tset mode, valid mode: Seq, Random, Interval");
@@ -232,16 +255,12 @@ int main(int argc, char *argv[]){
     }
     
     printf("mode : %d\n",mode);
-    MemRequestor MR(throughput, DEF_BLOCK_MEMORY, 1, 1);
+    MemRequestor MR(throughput, block, rwp);
     MemContainer Mc_r, Mc_w;
     Mc_r.Apply(DEF_TOTAL_MEMORY);
     Mc_w.Apply(DEF_TOTAL_MEMORY);
     if(mode == 1){
         MR.Request_Seq();
-        //while(1){
-        //    Mc_r.Read_seq(DEF_TOTAL_MEMORY);
-        //    Mc_w.Write_seq(DEF_TOTAL_MEMORY);
-        //}
     }
     else if (mode == 2){
         MR.Request_Rand();
