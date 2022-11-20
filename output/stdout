@@ -1,3 +1,2 @@
 Samples	, Byte/thd	, ChaseThds	, ChaseNS	, ChaseMibs	, ChDeviate	, LoadThds	, LdMaxMibs	, LdAvgMibs	, LdDeviate	, ChaseArg	, MemLdArg
-5     	, 268435456  	, 1       	, 95.671  	, 80      	, 0.001   	, 0       	, 0       	, 0       	, 0.000   	, simple    	, --------
-40960.00 MiB transferred (21185.72 MiB/sec)
+5     	, 268435456  	, 1       	, 99.291  	, 77      	, 0.001   	, 0       	, 0       	, 0       	, 0.000   	, simple    	, --------
